@@ -1,7 +1,7 @@
 /*
   GANTI URL_APPS_SCRIPT di bawah dengan URL deployment Web App Apps Script kamu.
 */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuy8DxEFXxzHH1tTAL_1Hj0iDQgPro_2K0U-KWJonm2RbcGO6dvLjMZ_R6So3h6jEcHw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrk6Sc2bxG8I_QXa7PU_edZsYkgcUxVZpYuCw8ULI5i65QweJnx6_RJOVvqF5xTobw/exec";
 
 const $ = (id) => document.getElementById(id);
 const loginPanel = $("login-panel"), quizPanel = $("quiz-panel"), resultPanel = $("result-panel");

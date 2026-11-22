@@ -1,7 +1,7 @@
 /*
   GANTI URL_APPS_SCRIPT di bawah dengan URL deployment Web App Apps Script kamu.
 */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHLDs8bz0w21Hs-yUryPdZRsLCU4zdcwT1qKF1LVUM_2o0-Spv0P_4hxcNho9Z7SBedA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLbLaILjKD9wYjOvPA327gh62wghDJ9DHHN5KLFmVHpFNIF5HK9EbCjQe3IOqhfPucig/exec";
 
 const $ = (id) => document.getElementById(id);
 const loginPanel = $("login-panel"), quizPanel = $("quiz-panel"), resultPanel = $("result-panel");
@@ -21,48 +21,22 @@ $("login-form").addEventListener("submit", (e) => {
   loadQuestions();
 });
 
-function loadQuestions() {
-  const callback = "receiveQuizQuestions";
-
-  let received = false;
-
-  window[callback] = function(data) {
-    received = true;
-
-    if (!data || !Array.isArray(data.questions)) {
-      showError("Data soal tidak valid dari Apps Script.");
-      return;
-    }
-
+function loadQuestions(){
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "URL_APPS_SCRIPT") {
+    showError("URL Apps Script belum dipasang. Hubungi penyelenggara.");
+    return;
+  }
+  const callback = "quizQuestions_" + Date.now();
+  window[callback] = (data) => {
+    delete window[callback];
+    if (!data || !data.questions) { showError("Soal tidak berhasil dimuat."); return; }
     questions = data.questions;
     answers = Array(questions.length).fill(null);
     renderQuestion();
   };
-
   const script = document.createElement("script");
-
-  script.src =
-    APPS_SCRIPT_URL +
-    "?action=questions&callback=" +
-    callback +
-    "&t=" + Date.now();
-
-  script.onload = function() {
-    setTimeout(function() {
-      if (!received) {
-        showError(
-          "Apps Script berhasil dibuka, tetapi data soal tidak diterima. Periksa deployment dan fungsi doGet."
-        );
-      }
-    }, 1000);
-  };
-
-  script.onerror = function() {
-    showError(
-      "Gagal terhubung ke Apps Script. Periksa URL Web App dan izin akses."
-    );
-  };
-
+  script.src = APPS_SCRIPT_URL + "?action=questions&callback=" + callback;
+  script.onerror = () => showError("Gagal memuat soal. Periksa koneksi internet.");
   document.head.appendChild(script);
 }
 
@@ -139,18 +113,22 @@ function submitResult(){
 
   const expectedNpm = participant.npm;
   window.addEventListener("message", function onMessage(event){
-    if (!event.data || event.data.npm !== expectedNpm) return;
+    // Apps Script dapat mengirim payload langsung atau dalam pembungkus.
+    const payload = event.data && event.data.type === "QUIZ_RESULT"
+      ? event.data.data
+      : event.data;
+    if (!payload || payload.npm !== expectedNpm) return;
     window.removeEventListener("message", onMessage);
-    if (event.data.ok) {
-      const score = Number(event.data.score);
+    if (payload.ok) {
+      const score = Number(payload.score);
       $("score").innerHTML = `${score}<span>/100</span>`;
-      $("correct-count").textContent = event.data.correct;
-      $("wrong-count").textContent = event.data.wrong;
+      $("correct-count").textContent = payload.correct;
+      $("wrong-count").textContent = payload.wrong;
       $("score-caption").textContent = score === 100 ? "Sempurna! Semua jawaban benar." : score >= 70 ? "Bagus, terus pertahankan!" : "Terima kasih sudah menyelesaikan kuis.";
       $("save-status").textContent = "Hasil berhasil tersimpan.";
     } else {
       $("score").innerHTML = `—<span>/100</span>`;
-      $("save-status").textContent = event.data.message || "Hasil tidak tersimpan. Hubungi penyelenggara.";
+      $("save-status").textContent = payload.message || "Hasil tidak tersimpan. Hubungi penyelenggara.";
     }
   });
   form.submit();

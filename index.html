@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kuis Asesmen Ramah Psikologis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <div class="brand"><span class="brand-mark">Q</span><span>QUIZ<span class="brand-light">ROOM</span></span></div>
+    <section class="panel" id="login-panel">
+      <div class="eyebrow">KUIS PEMBELAJARAN</div>
+      <h1>Asesmen yang<br><span>Ramah Psikologis</span></h1>
+      <p class="sub">Isi identitas dengan benar sebelum memulai kuis.</p>
+      <form id="login-form">
+        <label for="nama">Nama lengkap</label>
+        <input id="nama" name="nama" placeholder="Masukkan nama lengkap" autocomplete="name" required>
+        <label for="kelas">Kelas</label>
+        <input id="kelas" name="kelas" placeholder="Contoh: PM A / 1A" required>
+        <label for="npm">NPM</label>
+        <input id="npm" name="npm" placeholder="Masukkan NPM" required>
+        <button class="primary" type="submit">Mulai kuis <span>→</span></button>
+      </form>
+      <div class="notice">10 soal · 10 poin untuk setiap jawaban benar · Tidak dapat mengulang</div>
+    </section>
+
+    <section class="panel quiz-panel hidden" id="quiz-panel">
+      <div class="quiz-top"><div class="eyebrow">ASESMEN RAMAH PSIKOLOGIS</div><div class="counter" id="counter">SOAL 1 / 10</div></div>
+      <div class="progress"><div id="progress-fill"></div></div>
+      <div class="question-number" id="question-number">01</div>
+      <h2 id="question-text"></h2>
+      <div class="options" id="options"></div>
+      <div class="quiz-footer"><span>Jawaban terkunci setelah dipilih.</span><span id="participant-mini"></span></div>
+    </section>
+
+    <section class="panel result-panel hidden" id="result-panel">
+      <div class="eyebrow">KUIS SELESAI</div>
+      <div class="result-icon">✓</div>
+      <h1>Hasil pengerjaan</h1>
+      <p class="sub" id="result-name"></p>
+      <div class="score-card"><div class="score-label">NILAI AKHIR</div><div class="score" id="score">0<span>/100</span></div><div class="score-caption" id="score-caption"></div></div>
+      <div class="stats"><div><strong id="correct-count">0</strong><span>Benar</span></div><div><strong id="wrong-count">0</strong><span>Salah</span></div></div>
+      <div class="save-status" id="save-status">Mengirim hasil ke penyelenggara…</div>
+      <p class="small-note">Nilai ini merupakan hasil dari jawaban yang kamu pilih. Terima kasih sudah mengerjakan.</p>
+    </section>
+    <footer>Quizroom · Kuis pembelajaran</footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
